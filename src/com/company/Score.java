@@ -14,7 +14,7 @@ public class Score {
     Score(){
         initialize();
         mode = Mode.REGULAR;
-    }
+    } //end default Constructor
     void initialize(){
         sets1 = sets2 = 0;
         games1 = games2 = 0;
@@ -22,16 +22,16 @@ public class Score {
         tiebreak = false;
         previousSet1 = new FinishedSet();
         previousSet2 = new FinishedSet();
-    }
+    } //end initialize
     void setMode(Mode newMode){
         mode = newMode;
-    }
+    } //end setMode
     Mode getMode(){
         return mode;
-    }
+    } //end getMode
     void reset(){
         initialize();
-    }
+    } //end reset
     private void incrementPlayer1_regular(){
         if(points1 < 40 && points2 < 40){
             if(points1 == 0)       points1 = 15;
@@ -82,7 +82,31 @@ public class Score {
             points2 = 40;
         }
         if(games1 == 6 && games2 == 6) tiebreak = true;
-    }
+    } //end incrementPlayer1_regular
+    private void incrementPlayer1_tiebreak(){
+        points1++;
+        if(points1 >= 7 && points1 - points2 >= 2){
+            games1++;
+            sets1++;
+            if(!previousSet1.exists()){
+                previousSet1.setGames1(games1);
+                previousSet1.setGames2(games2);
+            }
+            else{
+                previousSet2.setGames1(games1);
+                previousSet2.setGames2(games2);
+            }
+            games1 = games2 = 0;
+            points1 = points2 = 0;
+            tiebreak = false;
+        }
+    } //end incrementPlayer1_tiebreak
+    public void incrementPlayer1(){
+        if(tiebreak)
+            incrementPlayer1_tiebreak();
+        else
+            incrementPlayer1_regular();
+    } //end incrementPlayer1
     private void incrementPlayer2_regular(){
         if(points2 < 40 && points1 < 40){
             if(points2 == 0)       points2 = 15;
@@ -133,25 +157,7 @@ public class Score {
             points1 = 40;
         }
         if(games1 == 6 && games2 == 6) tiebreak = true;
-    }
-    private void incrementPlayer1_tiebreak(){
-        points1++;
-        if(points1 >= 7 && points1 - points2 >= 2){
-            games1++;
-            sets1++;
-            if(!previousSet1.exists()){
-                previousSet1.setGames1(games1);
-                previousSet1.setGames2(games2);
-            }
-            else{
-                previousSet2.setGames1(games1);
-                previousSet2.setGames2(games2);
-            }
-            games1 = games2 = 0;
-            points1 = points2 = 0;
-            tiebreak = false;
-        }
-    }
+    } //end incrementPlayer2_regular
     private void incrementPlayer2_tiebreak(){
         points2++;
         if(points2 >= 7 && points2 - points1 >= 2){
@@ -169,21 +175,13 @@ public class Score {
             points1 = points2 = 0;
             tiebreak = false;
         }
-    }
-    public void incrementPlayer1(){
-        if(tiebreak)
-            incrementPlayer1_tiebreak();
-        else
-            incrementPlayer1_regular();
-        this.displayOnConsole();
-    }
+    } //end incrementPlayer2_tiebreak
     public void incrementPlayer2(){
         if(tiebreak)
             incrementPlayer2_tiebreak();
         else
             incrementPlayer2_regular();
-        this.displayOnConsole();
-    }
+    } //end incrementPlayer2
     void displayRegular(){
         System.out.print("P1: ");
         if(previousSet1.getGames1() != 0 || previousSet1.getGames2() != 0){
@@ -202,11 +200,11 @@ public class Score {
         }
         System.out.print(games2 + " " + (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT) + "\n");
         System.out.flush();
-    }
+    } //end displayRegular
     void displayWimbledon(){
         System.out.println("P1: " + sets1 + " " + games1 + " " + (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT));
         System.out.println("P2: " + sets2 + " " + games2 + " " + (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT));
-    }
+    }//end displayWimbledon
     public void displayOnConsole(){
         if(mode == Mode.REGULAR){
             this.displayRegular();
@@ -214,7 +212,7 @@ public class Score {
         else if(mode == Mode.WIMBLEDON){
             this.displayWimbledon();
         }
-    }
+    } //end displayOnConsole
     @Override
     public String toString(){
         StringBuilder scoreBuilder = new StringBuilder();
@@ -243,5 +241,5 @@ public class Score {
                     (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT));
         }
         return scoreBuilder.toString();
-    }
+    } //end toString
 } //end Score
