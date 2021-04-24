@@ -13,7 +13,6 @@ public class Score {
     private Integer sets1, games1, points1,
             sets2, games2, points2;
     private boolean tiebreak;
-    private FinishedSet previousSet1, previousSet2;
     private Vector<FinishedSet> finishedSets;
     private String player1, player2;
 
@@ -21,13 +20,24 @@ public class Score {
         initialize();
         mode = Mode.REGULAR;
     } //end default Constructor
+    Score(Score scr){
+        sets1   = scr.sets1;   sets2   = scr.sets2;
+        games1  = scr.games1;  games2  = scr.games2;
+        points1 = scr.points1; points2 = scr.points2;
+
+        tiebreak = scr.tiebreak;
+        finishedSets = new Vector<>();
+        for(var finishedSet : scr.finishedSets)
+            finishedSets.add(finishedSet);
+        player1 = scr.player1;
+        player2 = scr.player2;
+        mode = scr.mode;
+    }
     void initialize(){
         sets1 = sets2 = 0;
         games1 = games2 = 0;
         points1 = points2 = 0;
         tiebreak = false;
-        previousSet1 = new FinishedSet();
-        previousSet2 = new FinishedSet();
         finishedSets = new Vector<>();
         player1 = new String("P1");
         player2 = new String("P2");
