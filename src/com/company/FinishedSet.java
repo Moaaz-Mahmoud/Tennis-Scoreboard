@@ -6,6 +6,10 @@ public class FinishedSet {
     FinishedSet(){
         games1 = games2 = 0;
     }
+    FinishedSet(int g1, int g2){
+        games1 = g1;
+        games2 = g2;
+    }
     void setGames1(Integer g){
         games1 = g;
     }

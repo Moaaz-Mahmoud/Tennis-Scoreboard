@@ -1,8 +1,12 @@
 package com.company;
 
+import java.util.Vector;
+
 public class Score {
     public static final Integer ADVANTAGE = 45;
     public static final String ADVANTAGE_TEXT = "Ad";
+    public static final Integer NAME_FIELD = 18;
+    public static final Integer NAME_MAX_LENGTH = 14;
 
     enum Mode{WIMBLEDON, REGULAR}
     private Mode mode;
@@ -10,6 +14,8 @@ public class Score {
             sets2, games2, points2;
     private boolean tiebreak;
     private FinishedSet previousSet1, previousSet2;
+    private Vector<FinishedSet> finishedSets;
+    private String player1, player2;
 
     Score(){
         initialize();
@@ -22,6 +28,9 @@ public class Score {
         tiebreak = false;
         previousSet1 = new FinishedSet();
         previousSet2 = new FinishedSet();
+        finishedSets = new Vector<>();
+        player1 = new String("P1");
+        player2 = new String("P2");
     } //end initialize
     void setMode(Mode newMode){
         mode = newMode;
@@ -43,14 +52,7 @@ public class Score {
             points1 = points2 = 0;
             if(games1 >= 6 && games1-games2 >= 2){
                 sets1++;
-                if(!previousSet1.exists()){
-                    previousSet1.setGames1(games1);
-                    previousSet1.setGames2(games2);
-                }
-                else{
-                    previousSet2.setGames1(games1);
-                    previousSet2.setGames2(games2);
-                }
+                finishedSets.add(new FinishedSet(games1, games2));
                 games1 = games2 = 0;
             }
         }
@@ -67,14 +69,7 @@ public class Score {
             points1 = points2 = 0;
             if((games1 == 6 && games2 <= 4) || games1 == 7){
                 sets1++;
-                if(!previousSet1.exists()){
-                    previousSet1.setGames1(games1);
-                    previousSet1.setGames2(games2);
-                }
-                else{
-                    previousSet2.setGames1(games1);
-                    previousSet2.setGames2(games2);
-                }
+                finishedSets.add(new FinishedSet(games1, games2));
                 games1 = games2 = 0;
             }
         }
@@ -88,14 +83,7 @@ public class Score {
         if(points1 >= 7 && points1 - points2 >= 2){
             games1++;
             sets1++;
-            if(!previousSet1.exists()){
-                previousSet1.setGames1(games1);
-                previousSet1.setGames2(games2);
-            }
-            else{
-                previousSet2.setGames1(games1);
-                previousSet2.setGames2(games2);
-            }
+            finishedSets.add(new FinishedSet(games1, games2));
             games1 = games2 = 0;
             points1 = points2 = 0;
             tiebreak = false;
@@ -118,14 +106,7 @@ public class Score {
             points1 = points2 = 0;
             if((games2 == 6 && games1 <= 4) || games2 == 7){
                 sets2++;
-                if(!previousSet1.exists()){
-                    previousSet1.setGames1(games1);
-                    previousSet1.setGames2(games2);
-                }
-                else{
-                    previousSet2.setGames1(games1);
-                    previousSet2.setGames2(games2);
-                }
+                finishedSets.add(new FinishedSet(games1, games2));
                 games1 = games2 = 0;
             }
         }
@@ -142,14 +123,7 @@ public class Score {
             points1 = points2 = 0;
             if((games2 == 6 && games1 <= 4) || games2 == 7){
                 sets2++;
-                if(!previousSet1.exists()){
-                    previousSet1.setGames1(games1);
-                    previousSet1.setGames2(games2);
-                }
-                else{
-                    previousSet2.setGames1(games1);
-                    previousSet2.setGames2(games2);
-                }
+                finishedSets.add(new FinishedSet(games1, games2));
                 games1 = games2 = 0;
             }
         }
@@ -163,14 +137,7 @@ public class Score {
         if(points2 >= 7 && points2 - points1 >= 2){
             games2++;
             sets2++;
-            if(!previousSet1.exists()){
-                previousSet1.setGames1(games1);
-                previousSet1.setGames2(games2);
-            }
-            else{
-                previousSet2.setGames1(games1);
-                previousSet2.setGames2(games2);
-            }
+            finishedSets.add(new FinishedSet(games1, games2));
             games1 = games2 = 0;
             points1 = points2 = 0;
             tiebreak = false;
@@ -183,27 +150,22 @@ public class Score {
             incrementPlayer2_regular();
     } //end incrementPlayer2
     void displayRegular(){
-        System.out.print("P1: ");
-        if(previousSet1.getGames1() != 0 || previousSet1.getGames2() != 0){
-            System.out.print(previousSet1.getGames1() + " ");
-        }
-        if(previousSet2.getGames1() != 0 || previousSet2.getGames2() != 0){
-            System.out.print(previousSet2.getGames1() + " ");
-        }
+        System.out.print(StringAssistant.placeNameInField(player1));
+        for(var finishedSet : finishedSets)
+            System.out.print(finishedSet.getGames1() + "  ");
         System.out.print(games1 + " " + (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT) + "\n");
-        System.out.print("P2: ");
-        if(previousSet1.getGames1() != 0 || previousSet1.getGames2() != 0){
-            System.out.print(previousSet1.getGames2() + " ");
-        }
-        if(previousSet2.getGames1() != 0 || previousSet2.getGames2() != 0){
-            System.out.print(previousSet2.getGames2() + " ");
-        }
+
+        System.out.print(StringAssistant.placeNameInField(player2));
+        for(var finishedSet : finishedSets)
+            System.out.print(finishedSet.getGames2() + "  ");
         System.out.print(games2 + " " + (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT) + "\n");
         System.out.flush();
     } //end displayRegular
     void displayWimbledon(){
-        System.out.println("P1: " + sets1 + " " + games1 + " " + (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT));
-        System.out.println("P2: " + sets2 + " " + games2 + " " + (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT));
+        System.out.print(StringAssistant.placeNameInField(player1));
+        System.out.print(sets1 + "  " + games1 + "  " + (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT) + "\n");
+        System.out.print(StringAssistant.placeNameInField(player2));
+        System.out.print(sets2 + "  " + games2 + "  " + (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT) + "\n");
     }//end displayWimbledon
     public void displayOnConsole(){
         if(mode == Mode.REGULAR){
@@ -217,27 +179,20 @@ public class Score {
     public String toString(){
         StringBuilder scoreBuilder = new StringBuilder();
         if(mode == Mode.REGULAR){
-            scoreBuilder.append("P1    ");
-            if(previousSet1.exists()) {
-                scoreBuilder.append(previousSet1.getGames1() + "  ");
-            }
-            if(previousSet2.exists()){
-                scoreBuilder.append(previousSet2.getGames1() + "  ");
-            }
+            scoreBuilder.append(StringAssistant.placeNameInField(player1));
+            for(var finishedSet : finishedSets)
+                scoreBuilder.append(finishedSet.getGames1() + "  ");
             scoreBuilder.append(games1 + "  " + (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT) + "\n");
-            scoreBuilder.append("P2    ");
-            if(previousSet1.exists()){
-                scoreBuilder.append(previousSet1.getGames2() + "  ");
-            }
-            if(previousSet2.exists()){
-                scoreBuilder.append(previousSet2.getGames2() + "  ");
-            }
+
+            scoreBuilder.append(StringAssistant.placeNameInField(player2));
+            for(var finishedSet : finishedSets)
+                scoreBuilder.append(finishedSet.getGames2() + "  ");
             scoreBuilder.append(games2 + "  " + (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT));
         }
         else{
-            scoreBuilder.append("P1    " + sets1 + "  " + games1 + "  " +
+            scoreBuilder.append(StringAssistant.placeNameInField(player1) + sets1 + "  " + games1 + "  " +
                     (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT) + "\n" +
-                    "P2   " + sets2 + "  " + games2 + "  " +
+                    StringAssistant.placeNameInField(player2) + sets2 + "  " + games2 + "  " +
                     (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT));
         }
         return scoreBuilder.toString();
