@@ -10,11 +10,11 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Main extends Application implements EventHandler<ActionEvent> {
-    Button p1Increment          = new Button(),
-           p2Increment          = new Button(),
-           reset                = new Button();
-    Score  score                = new Score();
-    Label  Scoreboard           = new Label("");
+    Button p1Increment = new Button(),
+           p2Increment = new Button(),
+           reset       = new Button();
+    Score  score       = new Score();
+    Label  Scoreboard  = new Label("");
 
     public static void main(String[] args) {
         launch(args);
