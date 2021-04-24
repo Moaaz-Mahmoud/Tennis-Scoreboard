@@ -70,8 +70,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event){
-        final int x = 100, y = 100;
-
         if(event.getSource() == p1Increment) {
             scoreHistory.add(new Score(score));
             score.incrementPlayer1();
@@ -94,7 +92,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         }
         if(event.getSource() == wimbledonMode){
             score.setMode(score.getMode() == Score.Mode.WIMBLEDON ? Score.Mode.REGULAR : Score.Mode.WIMBLEDON);
-            wimbledonMode.setText(wimbledonMode.getText() == "Wimbledon" ? "Regular" : "Wimbledon");
+            wimbledonMode.setText(wimbledonMode.getText().equals("Wimbledon") ? "Regular" : "Wimbledon");
         }
         Scoreboard.setText(score.toString());
     }

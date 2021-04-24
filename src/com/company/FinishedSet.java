@@ -22,7 +22,4 @@ public class FinishedSet {
     Integer getGames2(){
         return games2;
     }
-    boolean exists(){
-        return games1 != 0 || games2 != 0;
-    }
 }
