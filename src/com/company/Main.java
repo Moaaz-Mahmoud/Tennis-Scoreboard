@@ -13,7 +13,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Button p1Increment        = new Button(),
            p2Increment        = new Button(),
            reset              = new Button(),
-           undo               = new Button();
+           undo               = new Button(),
+           wimbledonMode      = new Button();
     Label  Scoreboard         = new Label("");
     Score  score              = new Score();
     ScoreHistory scoreHistory = new ScoreHistory();
@@ -34,27 +35,32 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         reset.setOnAction(this);
         undo.setText("Undo");
         undo.setOnAction(this);
+        wimbledonMode.setText("Wimbledon");
+        wimbledonMode.setOnAction(this);
 
         Group layout = new Group();
 
-        Scoreboard.setLayoutX(150);  Scoreboard.setLayoutY(150);
-        reset.setLayoutX(150);       reset.setLayoutY(220);
-        p1Increment.setLayoutX(240); p1Increment.setLayoutY(220);
-        p2Increment.setLayoutX(290); p2Increment.setLayoutY(220);
-        undo.setLayoutX(150);        undo.setLayoutY(250);
+        Scoreboard.setLayoutX(150);    Scoreboard.setLayoutY(150);
+        reset.setLayoutX(150);         reset.setLayoutY(220);
+        p1Increment.setLayoutX(240);   p1Increment.setLayoutY(220);
+        p2Increment.setLayoutX(290);   p2Increment.setLayoutY(220);
+        undo.setLayoutX(150);          undo.setLayoutY(250);
+        wimbledonMode.setLayoutX(240); wimbledonMode.setLayoutY(250);
 
         Scoreboard.setFont(new Font("Times New Roman", 24));
         Font defaultFont = new Font("Times New Roman", 14);
-        reset      .setFont(defaultFont);
+        reset.setFont(defaultFont);
         p1Increment.setFont(defaultFont);
         p2Increment.setFont(defaultFont);
         undo.setFont(defaultFont);
+        wimbledonMode.setFont(defaultFont);
 
         layout.getChildren().add(p1Increment);
         layout.getChildren().add(p2Increment);
         layout.getChildren().add(reset);
         layout.getChildren().add(Scoreboard);
         layout.getChildren().add(undo);
+        layout.getChildren().add(wimbledonMode);
 
         Scene scene = new Scene(layout, 600, 400);
         primaryStage.setScene(scene);
@@ -80,9 +86,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         }
         if(event.getSource() == undo){
             if(!scoreHistory.isEmpty()) {
+                Score.Mode mode = score.getMode();
                 score = scoreHistory.getLastScore();
                 scoreHistory.removeLastScore();
+                score.setMode(mode);
             }
+        }
+        if(event.getSource() == wimbledonMode){
+            score.setMode(score.getMode() == Score.Mode.WIMBLEDON ? Score.Mode.REGULAR : Score.Mode.WIMBLEDON);
+            wimbledonMode.setText(wimbledonMode.getText() == "Wimbledon" ? "Regular" : "Wimbledon");
         }
         Scoreboard.setText(score.toString());
     }

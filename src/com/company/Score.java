@@ -31,7 +31,7 @@ public class Score {
             finishedSets.add(finishedSet);
         player1 = scr.player1;
         player2 = scr.player2;
-        mode = scr.mode;
+        mode = Mode.REGULAR;
     }
     void initialize(){
         sets1 = sets2 = 0;
@@ -203,7 +203,7 @@ public class Score {
             scoreBuilder.append(StringAssistant.placeNameInField(player1) + sets1 + "  " + games1 + "  " +
                     (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT) + "\n" +
                     StringAssistant.placeNameInField(player2) + sets2 + "  " + games2 + "  " +
-                    (points1 != ADVANTAGE ? points1 : ADVANTAGE_TEXT));
+                    (points2 != ADVANTAGE ? points2 : ADVANTAGE_TEXT));
         }
         return scoreBuilder.toString();
     } //end toString
